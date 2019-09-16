@@ -7,17 +7,18 @@ var CLOUD_HEIGHT = 270;
 var SHADOW_GAP_X = 10;
 var SHADOW_GAP_Y = 10;
 var FONT_SIZE = 16;
+var TITLE_VERTICAL_GAP = 4;
+var lineHeight = FONT_SIZE + TITLE_VERTICAL_GAP;
 
 var TITLE_MARGIN_TOP = 25;
 var TITLE_MARGIN_LEFT = 20;
-var TITLE_VERTICAL_GAP = 4;
 
 var HISTOGRAM_HEIGHT = 150;
 var HISTOGRAM_COLUMN_GAP = 50;
 var HISTOGRAM_COLUMN_WIDTH = 40;
 
 var HISTOGRAM_MARGIN_LEFT = 40;
-var HISTOGRAM_TOP = CLOUD_Y + TITLE_MARGIN_TOP + FONT_SIZE * 2 + TITLE_VERTICAL_GAP * 2;/**/
+var histogramPositionBottom = CLOUD_Y + TITLE_MARGIN_TOP + lineHeight * 3 + HISTOGRAM_HEIGHT;
 
 var renderCloud = function (ctx, x, y, width, height, color) {
   ctx.fillStyle = color;
@@ -42,21 +43,23 @@ window.renderStatistics = function (ctx, names, times) {
   ctx.fillStyle = '#000000';
   ctx.font = FONT_SIZE + 'px PT Mono';
   ctx.fillText('Ура вы победили!', CLOUD_X + TITLE_MARGIN_LEFT, CLOUD_Y + TITLE_MARGIN_TOP);
-  ctx.fillText('Список результатов:', CLOUD_X + TITLE_MARGIN_LEFT, CLOUD_Y + TITLE_MARGIN_TOP + FONT_SIZE + TITLE_VERTICAL_GAP);
+  ctx.fillText('Список результатов:', CLOUD_X + TITLE_MARGIN_LEFT, CLOUD_Y + TITLE_MARGIN_TOP + lineHeight);
 
   var maxTime = getMaximumValue(times);
 
   for (var j = 0; j < names.length; j++) {
+    var columnPositionX = CLOUD_X + HISTOGRAM_MARGIN_LEFT + HISTOGRAM_COLUMN_WIDTH * j + HISTOGRAM_COLUMN_GAP * j;
+    var barHeight = times[j] / maxTime * (HISTOGRAM_HEIGHT);
     ctx.fillStyle = '#000000';
     ctx.fillText(
         names[j],
-        CLOUD_X + HISTOGRAM_MARGIN_LEFT + HISTOGRAM_COLUMN_WIDTH * j + HISTOGRAM_COLUMN_GAP * j,
-        HISTOGRAM_TOP + HISTOGRAM_HEIGHT + FONT_SIZE + TITLE_VERTICAL_GAP
+        columnPositionX,
+        histogramPositionBottom + lineHeight
     );
     ctx.fillText(
         Math.round(times[j]),
-        CLOUD_X + HISTOGRAM_MARGIN_LEFT + HISTOGRAM_COLUMN_WIDTH * j + HISTOGRAM_COLUMN_GAP * j,
-        HISTOGRAM_TOP + HISTOGRAM_HEIGHT - times[j] / maxTime * (HISTOGRAM_HEIGHT - FONT_SIZE - TITLE_VERTICAL_GAP) - FONT_SIZE
+        columnPositionX,
+        histogramPositionBottom - barHeight - FONT_SIZE
     );
     if (names[j] === 'Вы') {
       ctx.fillStyle = 'rgba(255, 0, 0, 1)';
@@ -64,10 +67,10 @@ window.renderStatistics = function (ctx, names, times) {
       ctx.fillStyle = 'hsl(240, 100%, ' + Math.round(Math.random() * 100) + '%)';
     }
     ctx.fillRect(
-        CLOUD_X + HISTOGRAM_MARGIN_LEFT + HISTOGRAM_COLUMN_WIDTH * j + HISTOGRAM_COLUMN_GAP * j,
-        HISTOGRAM_TOP + HISTOGRAM_HEIGHT - times[j] / maxTime * (HISTOGRAM_HEIGHT - FONT_SIZE - TITLE_VERTICAL_GAP),
+        columnPositionX,
+        histogramPositionBottom - barHeight,
         HISTOGRAM_COLUMN_WIDTH,
-        times[j] / maxTime * (HISTOGRAM_HEIGHT - FONT_SIZE - TITLE_VERTICAL_GAP)
+        barHeight
     );
   }
 };

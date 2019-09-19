@@ -39,6 +39,8 @@ var WIZARD_EYES_COLORS = ['black',
   'green'
 ];
 
+var WIZART_LIST_COUNT = 4;
+
 var getRandomItem = function (featureList) {
   var currentIndex = Math.round(Math.random() * (featureList.length - 1));
   var currentValue = featureList[currentIndex];
@@ -53,7 +55,7 @@ var generateWisardFeatures = function (names, surnames, coatColors, eyesColors) 
   var generatorWizardCoatColors = coatColors.slice();
   var generatorWizardEyesColor = eyesColors.slice();
 
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < WIZART_LIST_COUNT; i++) {
     var currentWizardFeatures = {};
     currentWizardFeatures.name = getRandomItem(generatorWizardNames) + ' ' + getRandomItem(generatorWizardSurnames);
     currentWizardFeatures.coatColor = getRandomItem(generatorWizardCoatColors);

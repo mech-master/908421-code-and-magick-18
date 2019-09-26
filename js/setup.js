@@ -43,7 +43,7 @@ var getRandomItem = function (featureList, cuteCurrent) {
   var currentValue = featureList[currentIndex];
   if (cuteCurrent) {
     featureList.splice(currentIndex, 1);
-  };
+  }
   return currentValue;
 };
 
@@ -151,7 +151,6 @@ playerEyesColor.addEventListener('click', function () {
   playerEyesColor.style.fill = currentEyesColor;
   document.querySelector('input[name="eyes-color"]').value = currentEyesColor;
 });
-
 
 var playerFireballColor = document.querySelector('.setup-fireball-wrap');
 playerFireballColor.addEventListener('click', function () {

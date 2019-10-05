@@ -2,26 +2,6 @@
 'use strict';
 
 (function () {
-  var WIZARD_NAMES = ['Иван',
-    'Хуан Себастьян',
-    'Мария',
-    'Кристоф',
-    'Виктор',
-    'Юлия',
-    'Люпита',
-    'Вашингтон'
-  ];
-
-  var WISARD_SURNAMES = ['да Марья',
-    'Верон',
-    'Мирабелла',
-    'Вальц',
-    'Онопко',
-    'Топольницкая',
-    'Нионго',
-    'Ирвинг'
-  ];
-
   var WIZARD_COAT_COLORS = ['rgb(101, 137, 164)',
     'rgb(241, 43, 107)',
     'rgb(146, 100, 161)',
@@ -44,55 +24,42 @@
     WIZARD_EYES_COLORS: WIZARD_EYES_COLORS
   };
 
-  var getRandomItem = function (featureList, cuteCurrent) {
-    var currentIndex = Math.round(Math.random() * (featureList.length - 1));
-    var currentValue = featureList[currentIndex];
+  var getRandomItem = function (wizardList, cuteCurrent) {
+    var currentIndex = Math.round(Math.random() * (wizardList.length - 1));
     if (cuteCurrent) {
-      featureList.splice(currentIndex, 1);
+      var currentValue = wizardList.splice(currentIndex, 1)[0];
+    } else {
+      var currentValue = wizardList[currentIndex];
     }
     return currentValue;
   };
 
-  var generateWisardFeatures = function (names, surnames, coatColors, eyesColors) {
-    var wisardList = [];
-    var generatorWizardNames = names.slice();
-    var generatorWizardSurnames = surnames.slice();
-    var generatorWizardCoatColors = coatColors.slice();
-    var generatorWizardEyesColor = eyesColors.slice();
-
-    for (var i = 0; i < WIZART_LIST_COUNT; i++) {
-      var currentWizardFeatures = {};
-      currentWizardFeatures.name = getRandomItem(generatorWizardNames, true) + ' ' + getRandomItem(generatorWizardSurnames);
-      currentWizardFeatures.coatColor = getRandomItem(generatorWizardCoatColors, true);
-      currentWizardFeatures.eyesColor = getRandomItem(generatorWizardEyesColor, true);
-
-      wisardList.push(currentWizardFeatures);
-    }
-
-    return wisardList;
-  };
-
-  var wizardList = generateWisardFeatures(WIZARD_NAMES, WISARD_SURNAMES, WIZARD_COAT_COLORS, WIZARD_EYES_COLORS);
-
   var setupSimilarList = document.querySelector('.setup-similar-list');
   var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
-  var fragment = document.createDocumentFragment();
 
   var createNewWizard = function (template, features) {
     var newWizard = template.cloneNode(true);
     newWizard.querySelector('.setup-similar-label').textContent = features.name;
-    newWizard.querySelector('.wizard-coat').setAttribute('fill', features.coatColor);
-    newWizard.querySelector('.wizard-eyes').setAttribute('fill', features.eyesColor);
+    newWizard.querySelector('.wizard-coat').setAttribute('fill', features.colorCoat);
+    newWizard.querySelector('.wizard-eyes').setAttribute('fill', features.colorEyes);
     return newWizard;
   };
 
-  var fillWizardList = function (documentFragment, featureList) {
-    for (var j = 0; j < wizardList.length; j++) {
-      documentFragment.appendChild(createNewWizard(similarWizardTemplate, featureList[j]));
+  var fillWizardList = function (wizardList) {
+    var fragment = document.createDocumentFragment();
+    var copyWizardList = wizardList.slice();
+    for (var i = 1; i <= WIZART_LIST_COUNT; i++) {
+      var currentWizardFeatures = getRandomItem(copyWizardList, true)
+      fragment.appendChild(createNewWizard(similarWizardTemplate, currentWizardFeatures));
     }
-    return documentFragment;
+
+    setupSimilarList.appendChild(fragment);
   };
 
-  setupSimilarList.appendChild(fillWizardList(fragment, wizardList));
+  var onError = function (message) {
+    throw new Error(message);
+  };
+
+  backend.load(fillWizardList, onError);
   document.querySelector('.setup-similar').classList.remove('hidden');
 })();

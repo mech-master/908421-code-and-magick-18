@@ -26,10 +26,11 @@
 
   var getRandomItem = function (wizardList, cuteCurrent) {
     var currentIndex = Math.round(Math.random() * (wizardList.length - 1));
+    var currentValue;
     if (cuteCurrent) {
-      var currentValue = wizardList.splice(currentIndex, 1)[0];
+      currentValue = wizardList.splice(currentIndex, 1)[0];
     } else {
-      var currentValue = wizardList[currentIndex];
+      currentValue = wizardList[currentIndex];
     }
     return currentValue;
   };
@@ -49,7 +50,7 @@
     var fragment = document.createDocumentFragment();
     var copyWizardList = wizardList.slice();
     for (var i = 1; i <= WIZART_LIST_COUNT; i++) {
-      var currentWizardFeatures = getRandomItem(copyWizardList, true)
+      var currentWizardFeatures = getRandomItem(copyWizardList, true);
       fragment.appendChild(createNewWizard(similarWizardTemplate, currentWizardFeatures));
     }
 
@@ -60,6 +61,6 @@
     throw new Error(message);
   };
 
-  backend.load(fillWizardList, onError);
+  window.backend.load(fillWizardList, onError);
   document.querySelector('.setup-similar').classList.remove('hidden');
 })();

@@ -138,7 +138,7 @@
 
   setupWizardForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    backend.save(new FormData(setupWizardForm), closePopup, onError);
+    window.backend.save(new FormData(setupWizardForm), closePopup, onError);
   });
 
 })();

@@ -129,4 +129,16 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
+  var setupWizardForm = document.querySelector('.setup-wizard-form');
+
+  var onError = function (message) {
+    throw new Error(message);
+  };
+
+  setupWizardForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.backend.save(new FormData(setupWizardForm), closePopup, onError);
+  });
+
 })();

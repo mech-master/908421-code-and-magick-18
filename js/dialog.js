@@ -3,21 +3,10 @@
 // file dialog.js
 
 (function () {
-  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
-
   var setupPopup = document.querySelector('.setup');
   var buttonSetupOpen = document.querySelector('.setup-open');
   var buttonSetupClose = setupPopup.querySelector('.setup-close');
   var userNameInput = setupPopup.querySelector('.setup-user-name');
-
-  var WIZARD_FIREBALL_COLORS = [
-    '#ee4830',
-    '#30a8ee',
-    '#5ce6c0',
-    '#e848d5',
-    '#e6e848'
-  ];
 
   var dialogDefaulCoordinates;
 
@@ -29,7 +18,7 @@
   };
 
   var onPopupEscPress = function (evt) {
-    if ((evt.keyCode === ESC_KEYCODE) && (evt.target !== userNameInput)) {
+    if ((evt.keyCode === window.utils.Keycode.ESC) && (evt.target !== userNameInput)) {
       closePopup();
     }
   };
@@ -46,41 +35,51 @@
     document.addEventListener('keydown', onPopupEscPress);
   };
 
+  var wizard = {
+    onEyesChange: function () {},
+    onCoatChange: function () {}
+  }; /* */
+
+  var playerCoatColor = document.querySelector('.setup-wizard .wizard-coat');
+  var currentCoatColor = playerCoatColor.style.fill;
+  playerCoatColor.addEventListener('click', function () {
+    currentCoatColor = window.utils.getRandomItem(window.utils.WIZARD_COAT_COLORS, false);
+    playerCoatColor.style.fill = currentCoatColor;
+    document.querySelector('input[name="coat-color"]').value = currentCoatColor;
+    window.wizard.onCoatChange(currentCoatColor);
+  });
+
+  var playerEyesColor = document.querySelector('.setup-wizard .wizard-eyes');
+  var currentEyesColor = playerEyesColor.style.fill || 'black';
+  playerEyesColor.addEventListener('click', function () {
+    currentEyesColor = window.utils.getRandomItem(window.utils.WIZARD_EYES_COLORS, false);
+    playerEyesColor.style.fill = currentEyesColor;
+    document.querySelector('input[name="eyes-color"]').value = currentEyesColor;
+    wizard.onEyesChange(currentEyesColor);
+  });
+
+  var playerFireballColor = document.querySelector('.setup-fireball-wrap');
+  var currentFireballColor = playerFireballColor.style.backgroundColor || '#ee4830';
+  playerFireballColor.addEventListener('click', function () {
+    currentFireballColor = window.utils.getRandomItem(window.utils.WIZARD_FIREBALL_COLORS, false);
+    playerFireballColor.style.backgroundColor = currentFireballColor;
+    document.querySelector('input[name="fireball-color"]').value = currentFireballColor;
+  });
+
   buttonSetupOpen.addEventListener('click', openPopup);
 
   var buttonSetupOpenIcon = document.querySelector('.setup-open-icon');
   buttonSetupOpenIcon.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
+    if (evt.keyCode === window.utils.Keycode.ENTER) {
       openPopup();
     }
   });
 
   buttonSetupClose.addEventListener('click', closePopup);
   buttonSetupClose.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
+    if (evt.keyCode === window.utils.Keycode.ENTER) {
       closePopup();
     }
-  });
-
-  var playerCoatColor = document.querySelector('.setup-wizard .wizard-coat');
-  playerCoatColor.addEventListener('click', function () {
-    var currentCoatColor = window.utils.getRandomItem(window.setup.WIZARD_COAT_COLORS, false);
-    playerCoatColor.style.fill = currentCoatColor;
-    document.querySelector('input[name="coat-color"]').value = currentCoatColor;
-  });
-
-  var playerEyesColor = document.querySelector('.setup-wizard .wizard-eyes');
-  playerEyesColor.addEventListener('click', function () {
-    var currentEyesColor = window.utils.getRandomItem(window.setup.WIZARD_EYES_COLORS, false);
-    playerEyesColor.style.fill = currentEyesColor;
-    document.querySelector('input[name="eyes-color"]').value = currentEyesColor;
-  });
-
-  var playerFireballColor = document.querySelector('.setup-fireball-wrap');
-  playerFireballColor.addEventListener('click', function () {
-    var currentFireballColor = window.utils.getRandomItem(WIZARD_FIREBALL_COLORS, false);
-    playerFireballColor.style.backgroundColor = currentFireballColor;
-    document.querySelector('input[name="fireball-color"]').value = currentFireballColor;
   });
 
   var dialogHandle = setupPopup.querySelector('.upload');
@@ -141,4 +140,5 @@
     window.backend.save(new FormData(setupWizardForm), closePopup, onError);
   });
 
+  window.wizard = wizard;
 })();
